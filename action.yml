@@ -17,7 +17,7 @@ inputs:
     description: 'New function version description'
     required: true
     default: ''
-  entrypoint:
+  function_entrypoint:
     description: 'Entrypoint for function'
     required: true
     default: ''
@@ -45,7 +45,7 @@ runs:
     - ${{ inputs.function_description }}
     - ${{ inputs.runtime }}
     - ${{ inputs.version_description }}
-    - ${{ inputs.entrypoint }}
+    - ${{ inputs.function_entrypoint }}
     - ${{ inputs.memory }}
     - ${{ inputs.execution_timeout }}
     - ${{ inputs.source_dir }}

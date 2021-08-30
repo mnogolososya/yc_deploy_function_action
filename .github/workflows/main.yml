@@ -17,8 +17,8 @@ jobs:
           function_description: 'hello there'
           runtime: 'python39-preview'
           version_description: 'what a version!'
-          entrypoint: example.code_to_deploy.handler
+          function_entrypoint: 'example.code_to_deploy.handler'
           memory: 256
           execution_timeout: 7
-          source_dir: './yc_autodeploy/example'
+          source_dir: './example'
           environment: 'FOO=BAR'
