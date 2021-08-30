@@ -1,0 +1,24 @@
+name: test-master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy_function_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Deploy function from directory
+        uses: mnogolososya/lambda-functions/yc_autodeploy@v0.1
+        with:
+          function_name: 'my-glorious-function'
+          function_description: 'hello there'
+          runtime: 'python39-preview'
+          version_description: 'what a version!'
+          entrypoint: 'example.code_to_deploy.handler'
+          memory: 256
+          execution_timeout: 7
+          source_dir: './yc_autodeploy/example'
+          environment: 'FOO=BAR'

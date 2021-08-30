@@ -1,0 +1,52 @@
+name: 'Yandex Cloud Serverless Function Deploy Action'
+description: 'Deploy new serverless function version (including function creation if it does not exist)'
+inputs:
+  function_name:
+    description: 'Function name'
+    required: true
+    default: ''
+  function_description:
+    description: 'Function description'
+    required: true
+    default: ''
+  runtime:
+    description: 'Runtime for function'
+    required: true
+    default: ''
+  version_description:
+    description: 'New function version description'
+    required: true
+    default: ''
+  entrypoint:
+    description: 'Entrypoint for function'
+    required: true
+    default: ''
+  memory:
+    description: 'Maximum allowed memory for function in MB'
+    required: false
+    default: '128'
+  execution_timeout:
+    description: 'Maximum allowed time for function to execute in seconds'
+    required: false
+    default: '3'
+  source_dir:
+    description: 'Path to directory with code to deploy'
+    required: true
+    default: ''
+  environment:
+    description: 'key-value pairs of environment variables for function'
+    required: false
+    default: ''
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.function_name }}
+    - ${{ inputs.function_description }}
+    - ${{ inputs.runtime }}
+    - ${{ inputs.version_description }}
+    - ${{ inputs.entrypoint }}
+    - ${{ inputs.memory }}
+    - ${{ inputs.execution_timeout }}
+    - ${{ inputs.source_dir }}
+    - ${{ inputs.environment }}

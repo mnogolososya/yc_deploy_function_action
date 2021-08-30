@@ -1,0 +1,6 @@
+[default]
+BASE_URL='https://serverless-functions.api.cloud.yandex.net/functions/v1'
+AUTH_URL='https://iam.api.cloud.yandex.net/iam/v1/tokens'
+FOLDER_ID='b1ghsls4prhgto9om121'
+LOGGING_LEVEL='DEBUG'
+CREATE_FUNCTION_TIMEOUT=3
