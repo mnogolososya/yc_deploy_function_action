@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Deploy function from directory
-        uses: mnogolososya/yc_deploy_function_action@v0.2
+        uses: mnogolososya/yc_deploy_function_action@v0.3
         with:
           function_name: 'my-glorious-function'
           function_description: 'hello there'
