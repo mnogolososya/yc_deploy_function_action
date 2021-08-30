@@ -1,0 +1,1 @@
+# Yandex Cloud serverless function deploy github action
