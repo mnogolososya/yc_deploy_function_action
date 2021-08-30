@@ -43,4 +43,4 @@ ENV PATH="/opt/app/.venv/bin:$PATH" \
 RUN useradd -g users appuser
 USER appuser
 
-CMD ["python", "yc_autodeploy/main.py"]
+ENTRYPOINT ["python", "yc_autodeploy/main.py"]
