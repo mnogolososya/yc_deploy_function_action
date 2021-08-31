@@ -4,7 +4,7 @@ import logging
 import os
 import time
 import zipfile
-from dataclasses import dataclass, field, fields, asdict
+from dataclasses import dataclass, fields, asdict
 from io import BytesIO
 from os.path import join
 from typing import Generator, Optional
@@ -183,11 +183,11 @@ class FunctionParameters:
     runtime: str
     version_description: str
     function_entrypoint: str
+    memory: int
+    execution_timeout: int
     source_dir: str
     folder_id: str
-    environment: Optional[dict[str, str]] = None
-    memory: int = field(default=128)
-    execution_timeout: int = field(default=3)
+    environment: dict[str, str]
 
 
 @dataclass
@@ -200,7 +200,7 @@ class AuthParameters:
 
 def get_env_vars() -> dict:
     user_inputs = list(filter(lambda env: env[0].startswith('INPUT_'), os.environ.items()))
-    base_inputs = [f.name.upper() for f in fields(FunctionParameters) + fields(AuthParameters)]
+    base_inputs = [f.name.upper() for f in fields(FunctionParameters) + fields(AuthParameters)[1:]]
 
     return {
         key.replace('INPUT_', ''): value
@@ -210,6 +210,9 @@ def get_env_vars() -> dict:
 
 
 async def main():
+    # TODO:
+    #  - добавить нормальное readme
+    #  - подключить к настоящим лямбдам
     function_params = FunctionParameters(
         function_name=os.getenv('INPUT_FUNCTION_NAME'),
         function_description=os.getenv('INPUT_FUNCTION_DESCRIPTION'),
