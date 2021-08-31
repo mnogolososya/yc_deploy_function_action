@@ -26,5 +26,5 @@ jobs:
           execution_timeout: 7
           source_dir: './example'
           folder_id: 'b1ghsls4prhgto9om121'
-          environment: 'FOO=BAR'
           foo: 'bar'
+          debug: '1'

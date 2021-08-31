@@ -2,17 +2,17 @@ import asyncio
 import base64
 import logging
 import os
+import time
 import zipfile
+from dataclasses import dataclass, field, fields, asdict
 from io import BytesIO
 from os.path import join
 from typing import Generator, Optional
 
+import jwt
 from httpx import Auth, AsyncClient, Request, Response
 
 from dynaconfig import settings
-
-import time
-import jwt
 
 logging.basicConfig(level=settings.LOGGING_LEVEL, format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logger = logging.getLogger(__file__)
@@ -176,22 +176,41 @@ class YandexCloudServerlessFunctionService:
         return buffer.getvalue()
 
 
-def get_env_vars(env_str: str) -> dict:
-    return {key: value for key, value in [item.split('=') for item in env_str.split(',')]}
+@dataclass
+class FunctionParameters:
+    function_name: str
+    function_description: str
+    runtime: str
+    version_description: str
+    function_entrypoint: str
+    source_dir: str
+    folder_id: str
+    environment: Optional[dict[str, str]] = None
+    memory: int = field(default=128)
+    execution_timeout: int = field(default=3)
+
+
+@dataclass
+class AuthParameters:
+    auth_url: str
+    account_id: str
+    key_id: str
+    private_key: str
+
+
+def get_env_vars() -> dict:
+    user_inputs = list(filter(lambda env: env[0].startswith('INPUT_'), os.environ.items()))
+    base_inputs = [f.name.upper() for f in fields(FunctionParameters)]
+
+    return {
+        key.replace('INPUT_', ''): value
+        for key, value in user_inputs
+        if key.replace('INPUT_', '') not in base_inputs
+    }
 
 
 async def main():
-    logger.debug(os.getenv('INPUT_FOO'))
-    auth = YandexCloudAuth(
-        auth_url=settings.AUTH_URL,
-        account_id=os.getenv('INPUT_YC_ACCOUNT_ID'),
-        key_id=os.getenv('INPUT_YC_KEY_ID'),
-        private_key=os.getenv('INPUT_YC_PRIVATE_KEY').replace('\\n', '\n'),
-    )
-
-    function_service = YandexCloudServerlessFunctionService(auth=auth)
-
-    await function_service.deploy_function(
+    function_params = FunctionParameters(
         function_name=os.getenv('INPUT_FUNCTION_NAME'),
         function_description=os.getenv('INPUT_FUNCTION_DESCRIPTION'),
         runtime=os.getenv('INPUT_RUNTIME'),
@@ -201,8 +220,21 @@ async def main():
         execution_timeout=int(os.getenv('INPUT_EXECUTION_TIMEOUT', 3)),
         source_dir=os.getenv('INPUT_SOURCE_DIR'),
         folder_id=os.getenv('INPUT_FOLDER_ID'),
-        environment=get_env_vars(os.getenv('INPUT_ENVIRONMENT'))
+        environment=get_env_vars()
     )
+
+    auth_params = AuthParameters(
+        auth_url=settings.AUTH_URL,
+        account_id=os.getenv('INPUT_YC_ACCOUNT_ID'),
+        key_id=os.getenv('INPUT_YC_KEY_ID'),
+        private_key=os.getenv('INPUT_YC_PRIVATE_KEY').replace('\\n', '\n'),
+    )
+
+    auth = YandexCloudAuth(**asdict(auth_params))
+
+    function_service = YandexCloudServerlessFunctionService(auth=auth)
+
+    await function_service.deploy_function(**asdict(function_params))
 
 
 if __name__ == '__main__':
