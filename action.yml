@@ -54,24 +54,24 @@ inputs:
     required: false
     default: ''
 runs:
-  using: 'composite'
-  steps:
-    run: ${{ github.action_path }}/yc_autodeploy/main.py
-    shell: 'python'
+#  using: 'composite'
+#  steps:
+#    run: ${{ github.action_path }}/yc_autodeploy/main.py
+#    shell: 'python'
 
-#  using: 'docker'
-#  image: 'Dockerfile'
-#  args:
-#    - ${{ inputs.yc_account_id }}
-#    - ${{ inputs.yc_key_id }}
-#    - ${{ inputs.yc_private_key }}
-#    - ${{ inputs.function_name }}
-#    - ${{ inputs.function_description }}
-#    - ${{ inputs.runtime }}
-#    - ${{ inputs.version_description }}
-#    - ${{ inputs.function_entrypoint }}
-#    - ${{ inputs.memory }}
-#    - ${{ inputs.execution_timeout }}
-#    - ${{ inputs.source_dir }}
-#    - ${{ inputs.folder_id }}
-#    - ${{ inputs.environment }}
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.yc_account_id }}
+    - ${{ inputs.yc_key_id }}
+    - ${{ inputs.yc_private_key }}
+    - ${{ inputs.function_name }}
+    - ${{ inputs.function_description }}
+    - ${{ inputs.runtime }}
+    - ${{ inputs.version_description }}
+    - ${{ inputs.function_entrypoint }}
+    - ${{ inputs.memory }}
+    - ${{ inputs.execution_timeout }}
+    - ${{ inputs.source_dir }}
+    - ${{ inputs.folder_id }}
+    - ${{ inputs.environment }}
