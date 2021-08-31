@@ -181,6 +181,7 @@ def get_env_vars(env_str: str) -> dict:
 
 
 async def main():
+    logger.debug(os.getenv('INPUT_FOO'))
     auth = YandexCloudAuth(
         auth_url=settings.AUTH_URL,
         account_id=os.getenv('INPUT_YC_ACCOUNT_ID'),

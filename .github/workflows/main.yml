@@ -27,3 +27,4 @@ jobs:
           source_dir: './example'
           folder_id: 'b1ghsls4prhgto9om121'
           environment: 'FOO=BAR'
+          foo: 'bar'
