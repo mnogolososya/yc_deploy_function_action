@@ -136,14 +136,6 @@ class YandexCloudServerlessFunctionService:
 
         return response.json()['metadata']['functionId']
 
-    async def delete_function(self, folder_id: str, name: str) -> None:
-        function = await self.get_function_by_name(folder_id=folder_id, name=name)
-
-        if function:
-            async with AsyncClient() as client:
-                response = await client.delete(url=f'{settings.BASE_URL}/functions/{function["id"]}', auth=self._auth)
-                logger.debug(response.text)
-
     async def create_function_version(
             self,
             function_id: str,
