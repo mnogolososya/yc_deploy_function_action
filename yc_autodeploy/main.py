@@ -11,6 +11,9 @@ from httpx import Auth, AsyncClient, Request, Response
 
 from dynaconfig import settings
 
+import time
+import jwt
+
 logging.basicConfig(level=settings.LOGGING_LEVEL, format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logger = logging.getLogger(__file__)
 
@@ -18,11 +21,12 @@ logger = logging.getLogger(__file__)
 class YandexCloudAuth(Auth):
     requires_response_body = True
 
-    def __init__(self, auth_url: str, credentials: dict, session: Optional[AsyncClient] = None):
+    def __init__(self, auth_url: str, account_id: str, key_id: str, private_key: str):
         self._token: str = ''
         self._auth_url = auth_url
-        self._credentials = credentials
-        self._session = session
+        self._account_id = account_id
+        self._key_id = key_id
+        self._private_key = private_key
 
     async def async_auth_flow(self, request: Request) -> Generator[Request, Response, None]:
         response = None
@@ -39,12 +43,25 @@ class YandexCloudAuth(Auth):
             yield request
 
     async def async_build_refresh_request(self):
-        if self._session:
-            response = await self._session.post(url=self._auth_url, json=self._credentials)
-        else:
-            async with AsyncClient() as client:
-                response = await client.post(url=self._auth_url, json=self._credentials)
-        return response
+        async with AsyncClient() as client:
+            return await client.post(url=self._auth_url, json={'jwt': self.get_jwt()})
+
+    def get_jwt(self):
+        now = int(time.time())
+
+        payload = {
+            'aud': self._auth_url,
+            'iss': self._account_id,
+            'iat': now,
+            'exp': now + settings.JWT_LIFETIME
+        }
+
+        return jwt.encode(
+            payload=payload,
+            key=self._private_key,
+            algorithm='PS256',
+            headers={'kid': self._key_id}
+        )
 
     def update_tokens(self, response):
         if response.status_code == 200:
@@ -65,7 +82,8 @@ class YandexCloudServerlessFunctionService:
             memory: int,
             execution_timeout: int,
             source_dir: str,
-            environment: Optional[dict[str, str]] = None
+            folder_id: str,
+            **kwargs
     ) -> None:
         function = await self.get_function_by_name(folder_id=settings.FOLDER_ID, name=function_name)
         function_id = function['id'] if function else None
@@ -73,7 +91,7 @@ class YandexCloudServerlessFunctionService:
         if not function_id:
             logger.info(f'function with name {function_name} not found, creating a new one...')
             function_id = await self.create_function(
-                folder_id=settings.FOLDER_ID,
+                folder_id=folder_id,
                 name=function_name,
                 description=function_description
             )
@@ -88,7 +106,7 @@ class YandexCloudServerlessFunctionService:
             memory=memory,
             execution_timeout=execution_timeout,
             source_dir=source_dir,
-            environment=environment
+            environment=kwargs
         )
         logger.info('done!')
 
@@ -117,6 +135,14 @@ class YandexCloudServerlessFunctionService:
             logger.debug(response.text)
 
         return response.json()['metadata']['functionId']
+
+    async def delete_function(self, folder_id: str, name: str) -> None:
+        function = await self.get_function_by_name(folder_id=folder_id, name=name)
+
+        if function:
+            async with AsyncClient() as client:
+                response = await client.delete(url=f'{settings.BASE_URL}/functions/{function["id"]}', auth=self._auth)
+                logger.debug(response.text)
 
     async def create_function_version(
             self,
@@ -163,25 +189,26 @@ def get_env_vars(env_str: str) -> dict:
 
 
 async def main():
-    # TODO:
-    #  - написать обертку для гитхаб экшна
-    #  - добавить ретраи для создания версии
     auth = YandexCloudAuth(
         auth_url=settings.AUTH_URL,
-        credentials={"yandexPassportOauthToken": settings.OAUTH_TOKEN},
+        account_id=os.getenv('INPUT_YC_ACCOUNT_ID'),
+        key_id=os.getenv('INPUT_YC_KEY_ID'),
+        private_key=os.getenv('INPUT_YC_PRIVATE_KEY'),
     )
+
     function_service = YandexCloudServerlessFunctionService(auth=auth)
 
     await function_service.deploy_function(
-        function_name=os.getenv('function_name'),
-        function_description=os.getenv('function_description'),
-        runtime=os.getenv('runtime'),
-        version_description=os.getenv('version_description'),
-        function_entrypoint=os.getenv('function_entrypoint'),
-        memory=int(os.getenv('memory', 128)),
-        execution_timeout=int(os.getenv('execution_timeout', 3)),
-        source_dir=os.getenv('source_dir'),
-        environment=get_env_vars(os.getenv('environment'))
+        function_name=os.getenv('INPUT_FUNCTION_NAME'),
+        function_description=os.getenv('INPUT_FUNCTION_DESCRIPTION'),
+        runtime=os.getenv('INPUT_RUNTIME'),
+        version_description=os.getenv('INPUT_VERSION_DESCRIPTION'),
+        function_entrypoint=os.getenv('INPUT_FUNCTION_ENTRYPOINT'),
+        memory=int(os.getenv('INPUT_MEMORY', 128)),
+        execution_timeout=int(os.getenv('INPUT_EXECUTION_TIMEOUT', 3)),
+        source_dir=os.getenv('INPUT_SOURCE_DIR'),
+        folder_id=os.getenv('INPUT_FOLDER_ID'),
+        environment=get_env_vars(os.getenv('INPUT_ENVIRONMENT'))
     )
 
 

@@ -8,6 +8,8 @@ authors = ["Denis Shmelev <dshmelev@mnogolososya.ru>"]
 python = "^3.9"
 dynaconf = "^3.1.5"
 httpx = {extras = ["http2"], version = "^0.19.0"}
+PyJWT = "^2.1.0"
+cryptography = "^3.4.8"
 
 [tool.poetry.dev-dependencies]
 
