@@ -83,9 +83,9 @@ class YandexCloudServerlessFunctionService:
             execution_timeout: int,
             source_dir: str,
             folder_id: str,
-            **kwargs
+            environment: Optional[dict[str, str]] = None
     ) -> None:
-        function = await self.get_function_by_name(folder_id=settings.FOLDER_ID, name=function_name)
+        function = await self.get_function_by_name(folder_id=folder_id, name=function_name)
         function_id = function['id'] if function else None
 
         if not function_id:
@@ -106,7 +106,7 @@ class YandexCloudServerlessFunctionService:
             memory=memory,
             execution_timeout=execution_timeout,
             source_dir=source_dir,
-            environment=kwargs
+            environment=environment
         )
         logger.info('done!')
 
