@@ -193,7 +193,7 @@ async def main():
         auth_url=settings.AUTH_URL,
         account_id=os.getenv('INPUT_YC_ACCOUNT_ID'),
         key_id=os.getenv('INPUT_YC_KEY_ID'),
-        private_key=os.getenv('INPUT_YC_PRIVATE_KEY'),
+        private_key=os.getenv('INPUT_YC_PRIVATE_KEY').replace('\\n', '\n'),
     )
 
     function_service = YandexCloudServerlessFunctionService(auth=auth)
