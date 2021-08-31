@@ -61,17 +61,17 @@ runs:
 
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.yc_account_id }}
-    - ${{ inputs.yc_key_id }}
-    - ${{ inputs.yc_private_key }}
-    - ${{ inputs.function_name }}
-    - ${{ inputs.function_description }}
-    - ${{ inputs.runtime }}
-    - ${{ inputs.version_description }}
-    - ${{ inputs.function_entrypoint }}
-    - ${{ inputs.memory }}
-    - ${{ inputs.execution_timeout }}
-    - ${{ inputs.source_dir }}
-    - ${{ inputs.folder_id }}
-    - ${{ inputs.environment }}
+#  args:
+#    - ${{ inputs.yc_account_id }}
+#    - ${{ inputs.yc_key_id }}
+#    - ${{ inputs.yc_private_key }}
+#    - ${{ inputs.function_name }}
+#    - ${{ inputs.function_description }}
+#    - ${{ inputs.runtime }}
+#    - ${{ inputs.version_description }}
+#    - ${{ inputs.function_entrypoint }}
+#    - ${{ inputs.memory }}
+#    - ${{ inputs.execution_timeout }}
+#    - ${{ inputs.source_dir }}
+#    - ${{ inputs.folder_id }}
+#    - ${{ inputs.environment }}
