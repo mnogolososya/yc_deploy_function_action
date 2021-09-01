@@ -1,4 +1,5 @@
-ARG VERSION=3.9.1-slim
+#ARG VERSION=3.9.1-slim
+ARG VERSION=3.9.1-alpine
 
 FROM python:$VERSION AS builder
 
@@ -29,8 +30,8 @@ COPY --from=builder /opt/app/.venv /opt/app/.venv
 
 RUN apt-get update && apt-get install -y curl gnupg
 
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+#RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 COPY ./yc_autodeploy opt/app
 WORKDIR opt/app
