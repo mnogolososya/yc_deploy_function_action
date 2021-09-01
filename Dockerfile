@@ -36,4 +36,8 @@ ENV PATH="/opt/app/.venv/bin:$PATH" \
     LC_ALL="ru_RU.UTF-8" \
     PYTHONIOENCODING="utf-8"
 
+RUN addgroup -S appusers && adduser -S appuser -G appusers
+
+USER appuser
+
 ENTRYPOINT ["python", "yc_autodeploy/main.py"]
