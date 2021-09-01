@@ -1,4 +1,4 @@
-name: 'YandexCloud Serverless Function Deploy Action'
+name: 'YandexCloud serverless function deploy action'
 description: 'Deploy new serverless function version (including function creation if it does not exist)'
 inputs:
   yc_account_id:
@@ -48,10 +48,6 @@ inputs:
   folder_id:
     description: 'Function folder id'
     required: true
-    default: ''
-  environment:
-    description: 'Key-value pairs of environment variables for function'
-    required: false
     default: ''
 runs:
   using: 'docker'

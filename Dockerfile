@@ -27,8 +27,6 @@ FROM python:$VERSION
 
 COPY --from=builder /opt/app/.venv /opt/app/.venv
 
-#RUN apt-get update && apt-get install -y curl gnupg
-
 COPY ./yc_autodeploy opt/app
 
 WORKDIR opt/app
