@@ -2,8 +2,6 @@ ARG VERSION=3.9.1-alpine
 
 FROM python:$VERSION AS builder
 
-WORKDIR /opt/app/
-
 ENV PIP_DEFAULT_TIMEOUT=100 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
@@ -21,19 +19,17 @@ COPY pyproject.toml .
 
 RUN poetry install --no-dev --no-root
 
-ENV PATH="/opt/app/.venv/bin:$PATH"
+ENV PATH="/.venv/bin:$PATH"
 
 FROM python:$VERSION
 
-COPY --from=builder /opt/app/.venv /opt/app/.venv
+COPY --from=builder /.venv /.venv
 
-COPY ./yc_autodeploy opt/app/yc_autodeploy
+COPY ./yc_autodeploy /yc_autodeploy
 
-WORKDIR opt/app/yc_autodeploy
-
-ENV PATH="/opt/app/.venv/bin:$PATH" \
-    PYTHONPATH="/opt/app:$PYTHONPATH" \
+ENV PATH="/.venv/bin:$PATH" \
+    PYTHONPATH="/:$PYTHONPATH" \
     LC_ALL="ru_RU.UTF-8" \
     PYTHONIOENCODING="utf-8"
 
-ENTRYPOINT ["python", "./main.py"]
+ENTRYPOINT ["python", "./yc_autodeploy/main.py"]
