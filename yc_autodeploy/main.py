@@ -1,25 +1,15 @@
 import asyncio
 import logging
 import os
-from dataclasses import fields, asdict
+from dataclasses import asdict
 
 from dynaconfig import settings
 from yc_autodeploy.auth import YandexCloudAuth
 from yc_autodeploy.function_service import YandexCloudServerlessFunctionService
 from yc_autodeploy.models import FunctionParameters, AuthParameters
+from yc_autodeploy.utils import get_env_vars
 
 logging.basicConfig(level=settings.LOGGING_LEVEL, format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
-
-
-def get_env_vars() -> dict:
-    user_inputs = list(filter(lambda env: env[0].startswith('INPUT_'), os.environ.items()))
-    base_inputs = [f.name.upper() for f in fields(FunctionParameters) + fields(AuthParameters)[1:]]
-
-    return {
-        key.replace('INPUT_', ''): value
-        for key, value in user_inputs
-        if key.replace('INPUT_', '') not in base_inputs
-    }
 
 
 async def main():

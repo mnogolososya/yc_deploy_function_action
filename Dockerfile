@@ -1,4 +1,3 @@
-#ARG VERSION=3.9.1-slim
 ARG VERSION=3.9.1-alpine
 
 FROM python:$VERSION AS builder
@@ -28,12 +27,10 @@ FROM python:$VERSION
 
 COPY --from=builder /opt/app/.venv /opt/app/.venv
 
-RUN apt-get update && apt-get install -y curl gnupg
-
-#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-#RUN curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+#RUN apt-get update && apt-get install -y curl gnupg
 
 COPY ./yc_autodeploy opt/app
+
 WORKDIR opt/app
 
 ENV PATH="/opt/app/.venv/bin:$PATH" \
@@ -42,6 +39,7 @@ ENV PATH="/opt/app/.venv/bin:$PATH" \
     PYTHONIOENCODING="utf-8"
 
 RUN useradd -g users appuser
+
 USER appuser
 
 ENTRYPOINT ["python", "yc_autodeploy/main.py"]
