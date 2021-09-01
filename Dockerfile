@@ -1,4 +1,4 @@
-ARG VERSION=3.9.1-alpine
+ARG VERSION=3.9.1-slim
 
 FROM python:$VERSION AS builder
 
