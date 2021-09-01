@@ -40,4 +40,6 @@ RUN useradd -g users appuser
 
 USER appuser
 
+RUN echo $(ls)
+
 ENTRYPOINT ["python", "yc_autodeploy/main.py"]
