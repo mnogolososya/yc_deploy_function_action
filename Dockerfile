@@ -29,15 +29,11 @@ COPY --from=builder /opt/app/.venv /opt/app/.venv
 
 COPY ./yc_autodeploy opt/app/yc_autodeploy
 
-WORKDIR opt/app
+WORKDIR opt/app/yc_autodeploy
 
 ENV PATH="/opt/app/.venv/bin:$PATH" \
     PYTHONPATH="/opt/app:$PYTHONPATH" \
     LC_ALL="ru_RU.UTF-8" \
     PYTHONIOENCODING="utf-8"
 
-RUN addgroup -S appusers && adduser -S appuser -G appusers
-
-USER appuser
-
-ENTRYPOINT ["python", "yc_autodeploy/main.py"]
+ENTRYPOINT ["python", "./main.py"]
