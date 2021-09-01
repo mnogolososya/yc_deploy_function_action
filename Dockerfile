@@ -1,4 +1,4 @@
-ARG VERSION=3.9.1-slim
+ARG VERSION=3.9.1-alpine
 
 FROM python:$VERSION AS builder
 
@@ -11,9 +11,9 @@ ENV PIP_DEFAULT_TIMEOUT=100 \
     PYTHONDONTWRITEBYTECODE=1 \
     POETRY_VERSION=1.1.4
 
-RUN pip install "poetry==$POETRY_VERSION"
+RUN apk update && apk add gcc git g++ unixodbc-dev musl-dev python3-dev libffi-dev openssl-dev cargo
 
-RUN apt-get update && apt-get install -y git gcc g++ unixodbc-dev
+RUN pip install "poetry==$POETRY_VERSION"
 
 COPY poetry.lock .
 COPY poetry.toml .
@@ -27,7 +27,7 @@ FROM python:$VERSION
 
 COPY --from=builder /opt/app/.venv /opt/app/.venv
 
-COPY ./yc_autodeploy opt/app
+COPY ./yc_autodeploy opt/app/yc_autodeploy
 
 WORKDIR opt/app
 
@@ -36,7 +36,7 @@ ENV PATH="/opt/app/.venv/bin:$PATH" \
     LC_ALL="ru_RU.UTF-8" \
     PYTHONIOENCODING="utf-8"
 
-RUN useradd -g users appuser
+RUN addgroup -S appusers && adduser -S appuser -G appusers
 
 USER appuser
 
