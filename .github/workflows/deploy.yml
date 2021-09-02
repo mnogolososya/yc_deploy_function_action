@@ -1,6 +1,8 @@
 name: Deploy new action version
 
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     
 env:
