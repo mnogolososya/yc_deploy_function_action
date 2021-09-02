@@ -4,51 +4,44 @@ inputs:
   yc_account_id:
     description: 'YandexCloud account id'
     required: true
-    default: ''
   yc_key_id:
     description: 'YandexCloud trusted key id'
     required: true
-    default: ''
   yc_private_key:
     description: 'YandexCloud private key'
     required: true
-    default: ''
   function_name:
     description: 'Function name'
     required: true
-    default: ''
-  function_description:
-    description: 'Function description'
-    required: true
-    default: ''
   runtime:
     description: 'Runtime for function'
     required: true
+  folder_id:
+    description: 'Function folder id'
+    required: true
+  function_entrypoint:
+    description: 'Entry point of function'
+    required: true
+  function_description:
+    description: 'Function description'
+    required: false
     default: ''
   version_description:
     description: 'New function version description'
-    required: true
+    required: false
     default: ''
-  function_entrypoint:
-    description: 'Entrypoint for function'
-    required: true
-    default: ''
+  source_dir:
+    description: 'Directory with function code to deploy'
+    required: false
+    default: '.'
   memory:
     description: 'Maximum allowed memory for function in MB'
     required: false
     default: '128'
   execution_timeout:
-    description: 'Maximum allowed time for function to execute in seconds'
+    description: 'Execution timeout in seconds for function in Yandex Cloud'
     required: false
-    default: '3'
-  source_dir:
-    description: 'Path to directory with code to deploy'
-    required: true
-    default: ''
-  folder_id:
-    description: 'Function folder id'
-    required: true
-    default: ''
+    default: '15'
 runs:
   using: 'docker'
   image: 'docker://ghcr.io/mnogolososya/yc_deploy_function_action:1.7'
