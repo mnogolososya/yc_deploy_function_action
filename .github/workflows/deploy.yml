@@ -6,13 +6,15 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  
+permissions:
+  contents: read
+  packages: write
     
 jobs:
   build:
     name: Deploy new version
     runs-on: ubuntu-latest
-    
-    if: ${{ github.repository }} == 'mnogolososya/yc_deploy_function_action'
     
     steps:
       - name: Checkout repository
