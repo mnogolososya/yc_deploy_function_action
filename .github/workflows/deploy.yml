@@ -29,7 +29,7 @@ jobs:
         with:
           step: start
           token: ${{ secrets.GITHUB_TOKEN }}
-          env: release
+          env: Release
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -62,7 +62,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       
-      - name: update deployment status
+      - name: Update deployment status
         uses: bobheadxi/deployments@v0.4.3
         if: always()
         with:
