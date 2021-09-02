@@ -13,9 +13,6 @@ logging.basicConfig(level=settings.LOGGING_LEVEL, format='%(asctime)s | %(name)s
 
 
 async def main():
-    # TODO:
-    #  - подключить к настоящим лямбдам (настроить деплой по кнопке)
-    #  - подумать над дефолтными значения для удобства эксплуатации
     function_params = FunctionParameters(
         function_name=os.getenv('INPUT_FUNCTION_NAME', None),
         function_description=os.getenv('INPUT_FUNCTION_DESCRIPTION', None),

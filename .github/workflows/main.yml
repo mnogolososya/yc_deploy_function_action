@@ -12,7 +12,7 @@ jobs:
       - name: Checkout master
         uses: actions/checkout@master
       - name: Deploy function from directory
-        uses: mnogolososya/yc_deploy_function_action@v0.5
+        uses: mnogolososya/yc_deploy_function_action@v1.0
         with:
           yc_account_id: ${{ secrets.YC_LAMBDA_DEPLOY_ACCOUNT_ID }}
           yc_key_id: ${{ secrets.YC_LAMBDA_DEPLOY_KEY_ID }}
