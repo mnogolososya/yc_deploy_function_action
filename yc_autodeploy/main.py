@@ -16,6 +16,7 @@ logger = logging.getLogger(__file__)
 async def main() -> None:
     try:
         source_dir = os.getenv('INPUT_SOURCE_DIR')
+        logger.info(f'Source dir is set to {source_dir}')
 
         if not os.path.exists(source_dir):
             raise Exception('Source directory not found!')

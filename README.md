@@ -55,7 +55,7 @@ Function folder id **(Required)**
 ## Example usage
 
 ```
-uses: mnogolososya/yc_deploy_function_action@v1.3
+uses: mnogolososya/yc_deploy_function_action@v1.7.0
 with:
   yc_account_id: ${{ secrets.YC_LAMBDA_DEPLOY_ACCOUNT_ID }}
   yc_key_id: ${{ secrets.YC_LAMBDA_DEPLOY_KEY_ID }}
