@@ -33,8 +33,9 @@ with:
 | `function_name` | Name of a function to deploy | **Yes** |
 | `runtime` | Function runtime | **Yes** |
 | `folder_id` | Function folder id | **Yes** |
+| `function_entrypoint` | Entry point of function| No |
 | `function_description` | Function description | No |
 | `version_description` | New function version description | No |
-| `execution_timeout` | Execution timeout in seconds for function in Yandex Cloud. Default value is `15` | No |
 | `source_dir` | Directory with function code to deploy. Default value is `.` (root directory of repository) | No |
-
+| `memory` |  Memory limit in `megabytes` for function in Yandex Cloud Default value is `128` | No |
+| `execution_timeout` | Execution timeout in seconds for function in Yandex Cloud. Default value is `15` | No |
