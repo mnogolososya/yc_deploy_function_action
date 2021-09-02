@@ -1,56 +1,6 @@
-# YandexCloud serverless function deploy action
+# 🚀 Deploy cloud function to Yandex.Cloud
 
-Deploy new serverless function version (including function creation if it does not exist).
-
-## Inputs
-
-## `yc_account_id`
-
-YandexCloud account id **(Required)**
-
-## `yc_key_id`
-
-YandexCloud trusted key id **(Required)**
-
-## `yc_private_key`
-
-YandexCloud private key **(Required)**
-
-## `function_name`
-
-Function name **(Required)**
-
-## `function_description`
-
-Function description **(Required)**
-
-## `runtime`
-
-Runtime for function **(Required)**
-
-## `version_description`
-
-New function version description **(Required)**
-
-## `function_entrypoint`
-
-Entrypoint for function **(Required)**
-
-## `memory`
-
-Maximum allowed memory for function in MB
-
-## `execution_timeout`
-
-Maximum allowed time for function to execute in seconds
-
-## `source_dir`
-
-Path to directory with code to deploy **(Required)**
-
-## `folder_id`
-
-Function folder id **(Required)**
+Deploy new or update serverless function on Yandex.Cloud
 
 ## Example usage
 
@@ -72,3 +22,19 @@ with:
   foo: 'bar'
   debug: '1'
 ```
+
+## Inputs configuration
+
+| Key | Value | Required |
+| ------------- | ------------- | ------------- |
+| `yc_account_id` | YandexCloud account id | **Yes** |
+| `yc_key_id` | YandexCloud trusted key id | **Yes** |
+| `yc_private_key` | YandexCloud private key | **Yes** |
+| `function_name` | Name of a function to deploy | **Yes** |
+| `runtime` | Function runtime | **Yes** |
+| `folder_id` | Function folder id | **Yes** |
+| `function_description` | Function description | No |
+| `version_description` | New function version description | No |
+| `execution_timeout` | Execution timeout in seconds for function in Yandex Cloud. Default value is `15` | No |
+| `source_dir` | Directory with function code to deploy. Default value is `.` (root directory of repository) | No |
+
