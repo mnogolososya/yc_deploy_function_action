@@ -1,10 +1,9 @@
 import asyncio
 import base64
 import logging
-import os
+import pathlib
 import zipfile
 from io import BytesIO
-from os.path import join
 from typing import Optional
 
 from httpx import AsyncClient
@@ -115,8 +114,7 @@ class YandexCloudServerlessFunctionService:
         buffer = BytesIO()
 
         with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-            for path, _, files in os.walk(source_dir):
-                for file in files:
-                    zf.write(join(path, file))
+            for file in pathlib.Path(source_dir).rglob('*'):
+                zf.write(file, file.name)
 
         return buffer.getvalue()
