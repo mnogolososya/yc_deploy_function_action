@@ -48,6 +48,8 @@ jobs:
         with:
           push: true
           context: .
+          cache-from: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-to: type=inline
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
         
