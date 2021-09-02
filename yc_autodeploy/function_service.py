@@ -6,7 +6,7 @@ import zipfile
 from io import BytesIO
 from typing import Optional
 
-from httpx import AsyncClient
+from httpx import AsyncClient, Response
 
 from yc_autodeploy.dynaconfig import settings
 
@@ -29,21 +29,27 @@ class YandexCloudServerlessFunctionService:
             source_dir: str,
             folder_id: str,
             environment: Optional[dict[str, str]] = None
-    ) -> None:
+    ) -> Response:
         function = await self.get_function_by_name(folder_id=folder_id, name=function_name)
         function_id = function['id'] if function else None
 
         if not function_id:
             logger.info(f'function with name {function_name} not found, creating a new one...')
-            function_id = await self.create_function(
+            response = await self.create_function(
                 folder_id=folder_id,
                 name=function_name,
                 description=function_description
             )
+
+            if response.status_code != 200:
+                return response
+
+            function_id = response.json()['metadata']['functionId']
+
             await asyncio.sleep(settings.CREATE_FUNCTION_TIMEOUT)
 
         logger.info('creating new function version...')
-        await self.create_function_version(
+        response = await self.create_function_version(
             function_id=function_id,
             runtime=runtime,
             description=version_description,
@@ -54,6 +60,8 @@ class YandexCloudServerlessFunctionService:
             environment=environment
         )
         logger.info('done!')
+
+        return response
 
     async def get_function_by_name(self, folder_id: str, name: str) -> Optional[dict]:
         params = {
@@ -68,7 +76,7 @@ class YandexCloudServerlessFunctionService:
 
         return functions[0] if functions else None
 
-    async def create_function(self, folder_id: str, name: str, description: str) -> str:
+    async def create_function(self, folder_id: str, name: str, description: str) -> Response:
         data = {
             'folderId': folder_id,
             'name': name,
@@ -79,7 +87,7 @@ class YandexCloudServerlessFunctionService:
             response = await client.post(url=f'{settings.BASE_URL}/functions', json=data, auth=self._auth)
             logger.debug(response.text)
 
-        return response.json()['metadata']['functionId']
+        return response
 
     async def create_function_version(
             self,
@@ -91,7 +99,7 @@ class YandexCloudServerlessFunctionService:
             execution_timeout: int,
             source_dir: str,
             environment: Optional[dict[str, str]] = None
-    ) -> None:
+    ) -> Response:
         data = {
             'function_id': function_id,
             'runtime': runtime,
@@ -108,6 +116,8 @@ class YandexCloudServerlessFunctionService:
         async with AsyncClient() as client:
             response = await client.post(url=f'{settings.BASE_URL}/versions', json=data, auth=self._auth)
             logger.debug(response.text)
+
+        return response
 
     @staticmethod
     def _generate_zip(source_dir):

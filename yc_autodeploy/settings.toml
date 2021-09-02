@@ -1,6 +1,7 @@
 [default]
 BASE_URL='https://serverless-functions.api.cloud.yandex.net/functions/v1'
 AUTH_URL='https://iam.api.cloud.yandex.net/iam/v1/tokens'
-LOGGING_LEVEL='DEBUG'
+LOGGING_LEVEL='INFO'
 CREATE_FUNCTION_TIMEOUT=3
 JWT_LIFETIME = 3600
+DEPLOY_CONFIG_FILE_NAME = 'deploy_config.json'
