@@ -44,7 +44,7 @@ inputs:
     default: '15'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/mnogolososya/yc_deploy_function_action:1.0'
+  image: 'docker://ghcr.io/mnogolososya/yc_deploy_function_action:1.1'
 branding:
   icon: 'check-square'
   color: 'white'

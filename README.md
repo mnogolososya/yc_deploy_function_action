@@ -5,7 +5,7 @@ Deploy new or update serverless function on Yandex.Cloud
 ## Example usage
 
 ```
-uses: mnogolososya/yc_deploy_function_action@v1.0.0
+uses: mnogolososya/yc_deploy_function_action@v1.1.0
 with:
   yc_account_id: ${{ secrets.YC_LAMBDA_DEPLOY_ACCOUNT_ID }}
   yc_key_id: ${{ secrets.YC_LAMBDA_DEPLOY_KEY_ID }}

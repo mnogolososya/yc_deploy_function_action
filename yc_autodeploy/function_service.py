@@ -125,6 +125,7 @@ class YandexCloudServerlessFunctionService:
 
         with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             for file in pathlib.Path(source_dir).rglob('*'):
-                zf.write(file, file.name)
+                if file.name not in [settings.DEPLOY_CONFIG_FILE_NAME, '__init__.py']:
+                    zf.write(file, file.name)
 
         return buffer.getvalue()
