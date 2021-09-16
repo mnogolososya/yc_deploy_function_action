@@ -1,18 +1,14 @@
 import json
 import os
-from os.path import exists, join
-
-from yc_autodeploy.dynaconfig import settings
+from os.path import exists
 
 
-def get_env_vars(source_dir: str) -> dict:
-    deploy_config = join(source_dir, settings.DEPLOY_CONFIG_FILE_NAME)
+def get_env_vars(config_file: str) -> dict:
+    env_var_names = []
 
-    if exists(deploy_config):
-        with open(deploy_config, 'rb') as f:
-            env_var_names = [name.upper() for name in json.loads(f.read()).get('env')]
-    else:
-        env_var_names = []
+    if exists(config_file):
+        with open(config_file, 'rb') as f:
+            env_var_names = [name.upper() for name in json.loads(f.read()).get('env', [])]
 
     user_inputs = list(filter(lambda env: env[0].startswith('INPUT_'), os.environ.items()))
 
@@ -21,3 +17,13 @@ def get_env_vars(source_dir: str) -> dict:
         for key, value in user_inputs
         if key.replace('INPUT_', '') in env_var_names
     }
+
+
+def get_function_description(config_file: str) -> str:
+    description = os.getenv('INPUT_FUNCTION_DESCRIPTION', '')
+
+    if not description and exists(config_file):
+        with open(config_file, 'rb') as f:
+            description = json.loads(f.read()).get('description', '')
+
+    return description
