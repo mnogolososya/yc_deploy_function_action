@@ -126,6 +126,8 @@ class YandexCloudServerlessFunctionService:
         with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             for file in pathlib.Path(source_dir).rglob('*'):
                 if file.is_file():
-                    zf.write(file, '/'.join(file.parts).replace(source_dir, ''))
+                    file_path = '/'.join(file.parts).replace(f'{source_dir}/', '')
+                    logger.info(f'Adding {file_path} to ZIP...')
+                    zf.write(file, file_path)
 
         return buffer.getvalue()
