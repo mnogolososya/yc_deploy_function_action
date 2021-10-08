@@ -8,7 +8,7 @@ from dynaconfig import settings
 from yc_autodeploy.auth import YandexCloudAuth
 from yc_autodeploy.function_service import YandexCloudServerlessFunctionService
 from yc_autodeploy.models import FunctionParameters, AuthParameters
-from yc_autodeploy.utils import get_env_vars, get_function_description
+from yc_autodeploy.utils import get_env_vars, get_function_deploy_parameters
 
 logging.basicConfig(level=settings.LOGGING_LEVEL, format='%(asctime)s | %(name)s | %(levelname)s | %(message)s')
 logger = logging.getLogger(__file__)
@@ -22,15 +22,16 @@ async def main() -> None:
         raise Exception('Source directory not found!')
 
     deploy_config = join(source_dir, settings.DEPLOY_CONFIG_FILE_NAME)
+    deploy_parameters = get_function_deploy_parameters(deploy_config)
 
     function_params = FunctionParameters(
-        function_name=os.getenv('INPUT_FUNCTION_NAME', None),
-        function_description=get_function_description(deploy_config),
-        runtime=os.getenv('INPUT_RUNTIME', None),
-        version_description=os.getenv('INPUT_VERSION_DESCRIPTION', None),
-        function_entrypoint=os.getenv('INPUT_FUNCTION_ENTRYPOINT', None),
-        memory=int(os.getenv('INPUT_MEMORY', 128)),
-        execution_timeout=int(os.getenv('INPUT_EXECUTION_TIMEOUT', 3)),
+        function_name=deploy_parameters['function_name'],
+        function_description=deploy_parameters['function_description'],
+        runtime=deploy_parameters['runtime'],
+        version_description=deploy_parameters['version_description'],
+        function_entrypoint=deploy_parameters['function_entrypoint'],
+        memory=deploy_parameters['memory'],
+        execution_timeout=deploy_parameters['execution_timeout'],
         source_dir=source_dir,
         folder_id=os.getenv('INPUT_FOLDER_ID', None),
         environment=get_env_vars(deploy_config)
