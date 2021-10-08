@@ -3,5 +3,7 @@
     "FOO",
     "BAR"
   ],
-  "description": "test function"
+  "function_description": "test function",
+  "memory": 512,
+  "execution_timeout": 20
 }
