@@ -23,7 +23,7 @@ def get_env_vars(config_file: str) -> dict:
 def get_function_deploy_parameters(config_file: str) -> dict[str, Any]:
     function_description = os.getenv('INPUT_FUNCTION_DESCRIPTION', '')
     function_name = os.getenv('INPUT_FUNCTION_NAME', 'new-function')
-    runtime = os.getenv('INPUT_FUNCTION_RUNTIME', 'python37')
+    runtime = os.getenv('INPUT_RUNTIME', 'python37')
     version_description = os.getenv('INPUT_VERSION_DESCRIPTION', '')
     function_entrypoint = os.getenv('INPUT_FUNCTION_ENTRYPOINT', 'index.handler')
     memory = int(os.getenv('INPUT_MEMORY', 128))
