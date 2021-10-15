@@ -26,6 +26,7 @@ class YandexCloudServerlessFunctionService:
             function_entrypoint: str,
             memory: int,
             execution_timeout: int,
+            service_account_id: str,
             source_dir: str,
             folder_id: str,
             environment: Optional[dict[str, str]] = None
@@ -56,6 +57,7 @@ class YandexCloudServerlessFunctionService:
             function_entrypoint=function_entrypoint,
             memory=memory,
             execution_timeout=execution_timeout,
+            service_account_id=service_account_id,
             source_dir=source_dir,
             environment=environment
         )
@@ -97,6 +99,7 @@ class YandexCloudServerlessFunctionService:
             function_entrypoint: str,
             memory: int,
             execution_timeout: int,
+            service_account_id: str,
             source_dir: str,
             environment: Optional[dict[str, str]] = None
     ) -> Response:
@@ -112,6 +115,9 @@ class YandexCloudServerlessFunctionService:
 
         if environment:
             data.update({'environment': environment})
+
+        if service_account_id:
+            data.update({'service_account_id': service_account_id})
 
         async with AsyncClient() as client:
             response = await client.post(url=f'{settings.BASE_URL}/versions', json=data, auth=self._auth)

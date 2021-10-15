@@ -32,6 +32,7 @@ async def main() -> None:
         function_entrypoint=deploy_parameters['function_entrypoint'],
         memory=deploy_parameters['memory'],
         execution_timeout=deploy_parameters['execution_timeout'],
+        service_account_id=deploy_parameters['service_account_id'],
         source_dir=source_dir,
         folder_id=os.getenv('INPUT_FOLDER_ID', None),
         environment=get_env_vars(deploy_config)

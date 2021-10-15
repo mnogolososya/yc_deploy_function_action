@@ -10,6 +10,7 @@ class FunctionParameters:
     function_entrypoint: str
     memory: int
     execution_timeout: int
+    service_account_id: str
     source_dir: str
     folder_id: str
     environment: dict[str, str]

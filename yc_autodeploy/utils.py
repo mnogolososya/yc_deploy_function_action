@@ -28,6 +28,7 @@ def get_function_deploy_parameters(config_file: str) -> dict[str, Any]:
     function_entrypoint = os.getenv('INPUT_FUNCTION_ENTRYPOINT', 'index.handler')
     memory = int(os.getenv('INPUT_MEMORY', 128))
     execution_timeout = int(os.getenv('INPUT_EXECUTION_TIMEOUT', 3))
+    service_account_id = os.getenv('INPUT_SERVICE_ACCOUNT_ID', None)
 
     if not exists(config_file):
         return {
@@ -37,7 +38,8 @@ def get_function_deploy_parameters(config_file: str) -> dict[str, Any]:
             'version_description': version_description,
             'function_entrypoint': function_entrypoint,
             'memory': memory,
-            'execution_timeout': execution_timeout
+            'execution_timeout': execution_timeout,
+            'service_account_id': service_account_id
         }
 
     with open(config_file, 'rb') as f:
@@ -50,5 +52,6 @@ def get_function_deploy_parameters(config_file: str) -> dict[str, Any]:
         'version_description': json_parameters.get('version_description', version_description),
         'function_entrypoint': json_parameters.get('function_entrypoint', function_entrypoint),
         'memory': int(json_parameters.get('memory', memory)),
-        'execution_timeout': int(json_parameters.get('execution_timeout', execution_timeout))
+        'execution_timeout': int(json_parameters.get('execution_timeout', execution_timeout)),
+        'service_account_id': json_parameters.get('service_account_id', service_account_id)
     }
